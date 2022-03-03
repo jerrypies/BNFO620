@@ -1,8 +1,9 @@
 __author__ = "Jeremy Nguyen"
 
+#USED TO RENAME FILES WHEN THEY ARE STORED IN FOLDERS BASED ON SPECIES NAME
+
 import os
 import re
-
 
 class fileNameObject(object):
     def __init__(self, serial = "00000", species = "Default", collection = "12345"):
@@ -40,13 +41,13 @@ def renamePhotos(speciesindex,speciesnames):
     thisspecies = speciesnames
     thisfile = fileNameObject()
     filesinfolder = os.listdir()
-    collection = parseCollection(filesinfolder)
-
+    collection = parseCollection(filesinfolder,serial)
     serialnum = 0
 
     for i in filesinfolder:
+
         serialnum += 1
-        newname = fileNameObject(str(serialnum).zfill(5),thisspecies[thisindex],collection).nameOfFile()
+        newname = fileNameObject(str(serialnum).zfill(6),thisspecies[thisindex],collection).nameOfFile() #changed to 6 digital serial
         newname += ".jpg"
         os.rename(i,newname)
 
@@ -56,9 +57,10 @@ def parseCollection(filesinfolder):
     matchstring = ""
 
     for i in filenames:
+
         match1 = None
         if "SMF" in i:
-            match1 = re.search(r"(SMF \d{5})",i)
+            match1 = re.search(r"(SMF\s\d{5})",i)
             if match1:
                 matchstring = match1.group(1)
         elif "R" in i:
@@ -69,9 +71,12 @@ def parseCollection(filesinfolder):
     return matchstring
 
 
+
+
 def main():
-    # C:\Users\Jerry\Documents\VCU\BNFO 620 Bioinf Practicum\Images\AMS_photos\AMS_photos
+    # C:\Users\Jerry\Documents\VCU\BNFO 620 Bioinf Practicum\Images\AMS_photos\AMS_photospractice
     # userdir = str(input(r"Enter directory/path of folder: "))
+    # C:\Users\Jerry\Documents\VCU\BNFO 620 Bioinf Practicum\Images\SMF photos\SMF photospractice
     userdir = r"C:\Users\Jerry\Documents\VCU\BNFO 620 Bioinf Practicum\Images\AMS_photos\AMS_photospractice"
     os.chdir(userdir)
 
@@ -87,6 +92,8 @@ def main():
         speciesindex += 1
         changeFolder(userdir,i)
         renamePhotos(speciesindex,speciesnames)
+
+
 
 
 
